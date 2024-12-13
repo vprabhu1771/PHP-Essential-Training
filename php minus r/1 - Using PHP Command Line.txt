@@ -1,0 +1,20 @@
+The `php -r` command allows you to run PHP code directly from the command line without needing to create a PHP file. This is useful for quickly testing small snippets of PHP code. 
+
+Here's the basic syntax:
+
+
+php -r 'your_php_code_here;'
+
+
+For example, if you want to print "Hello, World!" using PHP, you can use the following command:
+
+
+php -r "echo 'Hello, World!\n';"
+
+
+This will output:
+
+Hello, World!
+
+
+If you need help with a specific PHP snippet or have a particular task in mind, let me know!
