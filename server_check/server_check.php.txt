@@ -1,0 +1,174 @@
+<?php 
+
+    /**
+    * @author Appsthing
+    * @version 4
+    */
+
+    error_reporting(0);
+
+    include 'server_checker_packages/server_db_connection_checker.php';
+
+    $server_requirements = [];
+
+    $laravel_version = '7.30.4';
+
+    $matched = '<i class="fas fa-check-circle text-success"></i>';
+    $missed = '<i class="fas fa-times-circle text-danger"></i>';
+
+    $laravel_requirement_list = [
+        '7.30.4' => [
+            'php' => '7.4',
+            'mcrypt' => false,
+            'openssl' => true,
+            'pdo' => true,
+            'mbstring' => true,
+            'tokenizer' => true,
+            'xml' => true,
+            'ctype' => true,
+            'json' => true,
+            'bcmath' => true,
+            'mod_rewrite' => true,
+            'file_info' => true,
+            'zip' => true,
+            'gd' => true,
+            'obs' => '',
+            'mysqli' => true,
+            'proc_open' => true,
+            'symlink' => true
+        ]
+    ];
+    
+    $server_requirements['php_version'] = version_compare(PHP_VERSION, $laravel_requirement_list[$laravel_version]['php'], '>=');
+
+    $server_requirements['openssl_enabled'] = extension_loaded("openssl");
+
+    $server_requirements['mbstring_enabled'] = extension_loaded("mbstring");
+
+    $server_requirements['tokenizer_enabled'] = extension_loaded("tokenizer");
+
+    $server_requirements['pdo_enabled'] = defined('PDO::ATTR_DRIVER_NAME');
+ 
+    $server_requirements['xml_enabled'] = extension_loaded("xml");
+
+    $server_requirements['ctype_enabled'] = extension_loaded("ctype");
+
+    $server_requirements['json_enabled'] = extension_loaded("json");
+
+    $server_requirements['mcrypt_enabled'] = extension_loaded("mcrypt_encrypt");
+
+    $server_requirements['bcmath_enabled'] = extension_loaded("bcmath");
+
+    $server_requirements['file_info_enabled'] = extension_loaded("fileinfo");
+
+    $server_requirements['zip_enabled'] = extension_loaded("zip");
+
+    $server_requirements['gd_enabled'] = extension_loaded("gd");
+
+    $server_requirements['mysqli_enabled'] = extension_loaded("mysqli");
+
+    $server_requirements['symlink_enabled'] = is_link('symlink_check');
+
+    $proc_open_enabled = true;
+
+    if(function_exists('ini_get')){
+        $disabled_functions = ini_get('disable_functions');
+        if ($disabled_functions != ''){
+            $disabled_function_array = explode(',', $disabled_functions);
+            if(in_array('proc_open', $disabled_function_array) || !function_exists('proc_open')){
+                $proc_open_enabled = false;
+            }
+        }
+    }
+
+    $server_requirements['proc_open_enabled'] = $proc_open_enabled;
+
+    chmod("../storage", 0775);
+    $storage_folder_writable = is_writable('../storage');
+
+    chmod("../bootstrap/cache", 0775);
+    $boostrap_cache_folder_writable = is_writable('../bootstrap/cache');
+
+    $storage_symbolic_link_exists = is_link('storage');
+    
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Requirements</title>
+    <style>
+        table {
+            width: 20%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .enabled {
+            color: green;
+        }
+
+        .disabled {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Server Requirements</h2>
+
+    <table border="1">
+        <tr>
+            <th>Extension</th>
+            <th>Status</th>
+        </tr>
+        <?php foreach ($server_requirements as $extension => $status): ?>
+            <tr>
+                <td><?= $extension ?></td>
+                <td class="<?= $status ? 'enabled' : 'disabled' ?>">
+                    <?= $status ? 'Enabled' : 'Disabled' ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+    <h2>Folder and Symbolic Link Permissions</h2>
+
+    <table border="1">
+        <tr>
+            <th>Folder/Link</th>
+            <th>Writable</th>
+        </tr>
+        <tr>
+            <td>Storage Folder</td>
+            <td class="<?= $storage_folder_writable ? 'enabled' : 'disabled' ?>">
+                <?= $storage_folder_writable ? 'Enabled' : 'Disabled' ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Bootstrap Cache Folder</td>
+            <td class="<?= $boostrap_cache_folder_writable ? 'enabled' : 'disabled' ?>">
+                <?= $boostrap_cache_folder_writable ? 'Enabled' : 'Disabled' ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Storage Symbolic Link</td>
+            <td class="<?= $storage_symbolic_link_exists ? 'enabled' : 'disabled' ?>">
+                <?= $storage_symbolic_link_exists ? 'Enabled' : 'Disabled' ?>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
