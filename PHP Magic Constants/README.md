@@ -31,61 +31,197 @@ Unlike regular constants, **magic constants are resolved at compile time**, not 
 | `ClassName::class` | Returns the fully qualified class name             |
 
 ---
+Here are **clear, full working examples** for each PHP magic constant 👇
 
-## 💡 Examples
+---
 
-### Example 1: File and Line
+## 1. `__LINE__` → Current Line Number
 
 ```php
-echo __FILE__;  // Output: /var/www/html/index.php
-echo __LINE__;  // Output: Line number
+<?php
+echo "This is line: " . __LINE__;
+echo "\nThis is line: " . __LINE__;
 ```
 
-### Example 2: Directory
+---
+
+## 2. `__FILE__` → Full File Path
 
 ```php
-echo __DIR__;   // Output: Directory path
+<?php
+echo "File path: " . __FILE__;
 ```
 
-### Example 3: Function Name
+---
+
+## 3. `__DIR__` → Directory Path
 
 ```php
-function testFunction() {
-    echo __FUNCTION__;
+<?php
+echo "Directory: " . __DIR__;
+```
+
+---
+
+## 4. `__FUNCTION__` → Function Name
+
+```php
+<?php
+function myFunction() {
+    echo "Function name: " . __FUNCTION__;
 }
-testFunction(); // Output: testFunction
+myFunction();
 ```
 
-### Example 4: Class and Method
+---
+
+## 5. `__CLASS__` → Class Name (with namespace)
 
 ```php
-class Demo {
-    public function show() {
-        echo __CLASS__;
-        echo __METHOD__;
-    }
-}
-$obj = new Demo();
-$obj->show();
-```
-
-### Example 5: Namespace
-
-```php
-namespace App\Controllers;
-
-echo __NAMESPACE__; // Output: App\Controllers
-```
-
-### Example 6: Class Name (Fully Qualified)
-
-```php
+<?php
 namespace App\Models;
 
-class User {}
+class User {
+    public function showClass() {
+        echo "Class name: " . __CLASS__;
+    }
+}
 
-echo User::class; // Output: App\Models\User
+$obj = new User();
+$obj->showClass();
 ```
+
+---
+
+## 6. `__TRAIT__` → Trait Name
+
+```php
+<?php
+namespace App\Traits;
+
+trait MyTrait {
+    public function showTrait() {
+        echo "Trait name: " . __TRAIT__;
+    }
+}
+
+class Test {
+    use MyTrait;
+}
+
+$obj = new Test();
+$obj->showTrait();
+```
+
+---
+
+## 7. `__METHOD__` → Class Method Name
+
+```php
+<?php
+class Demo {
+    public function display() {
+        echo "Method: " . __METHOD__;
+    }
+}
+
+$obj = new Demo();
+$obj->display();
+```
+
+---
+
+## 8. `__PROPERTY__` → Property Name (PHP 8.2+ Property Hooks)
+
+```php
+<?php
+class Example {
+    public string $name {
+        get {
+            return "Accessing property: " . __PROPERTY__;
+        }
+    }
+}
+
+$obj = new Example();
+echo $obj->name;
+```
+
+---
+
+## 9. `__NAMESPACE__` → Current Namespace
+
+```php
+<?php
+namespace App\Controllers;
+
+echo "Namespace: " . __NAMESPACE__;
+```
+
+---
+
+## 10. `ClassName::class` → Fully Qualified Class Name
+
+```php
+<?php
+namespace App\Models;
+
+class Product {}
+
+echo Product::class;
+```
+
+---
+
+## 🔥 Combined Example (All in One)
+
+```php
+<?php
+namespace App\Demo;
+
+trait SampleTrait {
+    public function traitMethod() {
+        echo "Trait: " . __TRAIT__ . "\n";
+    }
+}
+
+class Demo {
+    use SampleTrait;
+
+    public string $prop {
+        get {
+            return __PROPERTY__;
+        }
+    }
+
+    public function test() {
+        echo "Line: " . __LINE__ . "\n";
+        echo "File: " . __FILE__ . "\n";
+        echo "Dir: " . __DIR__ . "\n";
+        echo "Function: " . __FUNCTION__ . "\n";
+        echo "Method: " . __METHOD__ . "\n";
+        echo "Class: " . __CLASS__ . "\n";
+        echo "Namespace: " . __NAMESPACE__ . "\n";
+        echo "Class (FQN): " . self::class . "\n";
+
+        $this->traitMethod();
+        echo "Property: " . $this->prop . "\n";
+    }
+}
+
+$obj = new Demo();
+$obj->test();
+```
+
+---
+
+If you want next level:
+
+* Laravel real-time examples
+* Interview questions + answers
+* Debugging tricks using magic constants
+
+Just tell me 👍
 
 ---
 
